@@ -1,6 +1,6 @@
 # 1. SQL 
 
-Design simplified database model, which would allow to handle following entities: 
+Design simplified relational database model, which would allow to handle following entities: 
 
 - bank account of a client, 
 
