@@ -1,4 +1,4 @@
-# 1. SQL #
+# 1. SQL 
 
 Design simplified database model, which would allow to handle following entities: 
 
@@ -18,7 +18,7 @@ b) name and surnames of all clients, who in 1st quarter of 2015 had the sum of i
 c) client with the highest turnover in whole 2015
 
 
-# 2. Simple OO modelling (Scala) # 
+# 2. Simple OO modelling (Scala)
 
 We have a `class Car` with following attributes:
 
@@ -37,7 +37,7 @@ You need to write the body of the method which will return `Seq` of elements whi
 
 
 
-# 3. Poker (Scala FP appreciated) #
+# 3. Poker (Scala FP appreciated)
 You have a method which gets set of 5 cards with following signature:
 
 `? check (? cards)`
