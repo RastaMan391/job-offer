@@ -28,7 +28,7 @@ We have a `class Car` with following attributes:
 
 and method
 
-`function(Seq[Car] cars): Seq[Car]`
+`function(cars: Seq[Car]): Seq[Car]`
 
 You need to write the body of the method which will return `Seq` of elements which:
 
@@ -40,7 +40,7 @@ You need to write the body of the method which will return `Seq` of elements whi
 # 3. Poker (Scala FP appreciated)
 You have a method which gets set of 5 cards with following signature:
 
-`check (? cards): ?`
+`check (cards: ?): ?`
 
 The goal of this method is to verify which of the common Poker hands is represented within given set ( see here: https://en.wikipedia.org/wiki/List_of_poker_hands#Hand_categories ). 
 You need to figure out:
