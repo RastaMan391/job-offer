@@ -1,44 +1,58 @@
-# job-offer
-
 # 1. SQL #
-Zaprojektować uproszczony model, który pozwoli obsłużyć sytuację: konto bankowe klienta, operacja na koncie będąca uznaniem lub obciążeniem. 
-Reguły:
-- Klient może posiadać więcej kont
-Należy zapisać jakie wyodrębniłeś tabele i jakie są między nimi powiązania, oraz zapisać zapytanie SQL, które:
 
-a) Wyciągnie klientów powyżej 30 lat, którzy nie mieli żadnych obrotów (wpłat/wypłat) w styczniu 2013. 
+Design simplified database model, which would allow to handle following entities: 
 
-b) Wyciągnie imiona i nazwiska osób, które w I kwartale 2013r. posiadały sumę wpłat przekraczającą 100 tyś. zł.
+- bank account of a client, 
 
-c) Wyciagnie użytkownika o największych obrotach w roku 2012
+- operations on account being either positive transfer (incomming) or negative (outgoing).
+
+Rules are:
+- single client may have multiple accounts
+
+The goal is to model database tables and associations between them and to write down SQL queries which will give you following results:
+
+a) all clients who are older than 30 years old and who didn't have any operations on their account in January 2015
+
+b) name and surnames of all clients, who in 1st quarter of 2015 had the sum of incomming transfers exceeding $100k
+
+c) client with the highest turnover in whole 2015
 
 
-# 2. Samochod #
-Mamy klasę Samochod o atrybutach 
+# 2. Simple OO modelling #
 
-- String: marka 
+We have a `class Car` with following attributes:
+
+- String: brand 
 - String: model
-- String: pojemność (trzymana zawsze w postaci X.X, gdzie X to znak 0-9)
+- String: displacement volume of the engine (always in a form `X.X` where `X` is a character within range: `0-9`)
 
-oraz metodę
+and method
 
-Collection<Samochod> function(Samochod[] cars)
+Seq[Car] function(Seq[Car] cars)
 
-Należy napisać ciało metody (dowolny język), która na wyjściu zwróci kolekcję elementów jednocześnie eliminując duplikaty z tablicy wejściowej oraz sortując po marce, modelu, pojemnosci (zachowując kolejność atrybutów przy sortowaniu).
+You need to write the body of the method which will return `Seq` of elements which:
+
+- will be duplicate-free (no duplicates)
+- AND will be sorted by brand, model and displacement volume (in this particular order).
 
 
 
 # 3. Poker #
-Zadanie z nutką hazardową - Poker. Masz metodę, która dostaje konfigurację pięciu kart i ma sygnaturę
+You have a method which gets set of 5 cards with following signature:
+
 ? check (? cards)
-Zadaniem metody jest sprawdzenie czy w zestawie kart występuje STRIT lub KARETA. Każda pozostała konfiguracja nas nie interesuje. Należy wymyślić w jaki sposób:
 
-* reprezentowana będzie karta, 
+The goal of this method is to verify which of the common Poker hands is represented within given set ( see here: https://en.wikipedia.org/wiki/List_of_poker_hands#Hand_categories ). 
+You need to figure out:
 
-* metoda zwróci wynik (czy będzie to kod liczbowy, czy cokolwiek innego)
+* how single card will be represented
 
-* w jaki sposób dostanie zbiór kart wejściowych (tablica, kolekcja). 
+* what will this method return (number? enum? case class? and be ready to explain why you picked following return value)
 
-Można tworzyć dowolne typy oraz metody pomocnicze
+* how input set of cards will be represented. 
 
-Do zadań 2 i 3 należy napisać Unit Testy.
+You may create as many types / classes as you need and as many helper methods as needed.
+
+---
+
+Tasks 2 and 3 need to be covered with unit tests. Picking right unit test library (and build system) is your choice.
