@@ -1,5 +1,3 @@
-package example
-
 import scala.util.Random
 
 object Poker {

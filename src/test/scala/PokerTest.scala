@@ -1,5 +1,3 @@
-package example
-
 import org.scalatest.FunSuite
 import Poker._
 
