@@ -66,6 +66,10 @@ object Poker {
     else value
   }
 
+  def checkStraight(list:List[Card]): Boolean = {
+    checkStraightUp(list.sortWith(_.number > _.number)) || checkStraightDown(list.sortWith(_.number < _.number))
+  }
+
   def checkStraightUp(list: List[Card]): Boolean = {
     if (list(0).number == list(1).number + 1 && list.length > 2) checkStraightUp(list.tail)
     else if(list(0).number == list(1).number + 1 && list.length == 2) true
@@ -91,7 +95,7 @@ object Poker {
   }
 
   def checkPoker(list: List[Card]): Boolean = {
-    checkColor(list) && (checkStraightUp(list.sortWith(_.number > _.number)) || checkStraightDown(list.sortWith(_.number < _.number)))
+    checkColor(list) && checkStraight(list)
   }
 
   def check(list: List[Card]): String = {
@@ -100,8 +104,7 @@ object Poker {
     else if(checkPair(list, 0) == 4) "Four of kind"
     else if(checkFullHouse(list)) "Full house"
     else if(checkColor(list)) "Flush"
-    else if(checkStraightUp(list.sortWith(_.number > _.number))) "Straight"
-    else if(checkStraightDown(list.sortWith(_.number < _.number))) "Straight"
+    else if(checkStraight(list)) "Straight"
     else if(checkPair(list, 0) == 3) "Three of kind"
     else if(checkTwoPair(list, 0) == 9) "Two pair"
     else if(checkPair(list, 0) == 2) "One pair"
