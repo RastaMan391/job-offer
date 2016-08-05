@@ -116,7 +116,7 @@ object Poker {
 
   def main(args: Array[String]): Unit ={
     val card: List[Card] = randomCards
-    val card2: List[Card] = List(new Card(Cards.Ace,Color.Club),new Card(Cards.King,Color.Diamond), new Card(Cards.Ten,Color.Heart), new Card(Cards.Seven,Color.Spade), new Card(Cards.Six, Color.Club))
+    val card2: List[Card] = List(new Card(Cards.Ace,Color.Club),new Card(Cards.Ace,Color.Club), new Card(Cards.Ten,Color.Heart), new Card(Cards.Seven,Color.Spade), new Card(Cards.Six, Color.Club))
 
     println(check(card))
     println(check(card2))
