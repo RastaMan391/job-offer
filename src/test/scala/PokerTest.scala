@@ -6,7 +6,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class PokerTest extends FunSuite {
-  test("Straight flush!")(assert(check(List(new Card(Cards.Ten,Color.Diamond),new Card(Cards.Nine,Color.Diamond), new Card(Cards.Eight,Color.Diamond), new Card(Cards.Seven,Color.Diamond), new Card(Cards.Six, Color.Diamond))) == "Straight flush!"))
+  test("Straight flush!")(assert(check(List(new Card(Cards.Ten,Color.Diamond),new Card(Cards.Nine,Color.Diamond), new Card(Cards.Seven,Color.Diamond), new Card(Cards.Six, Color.Diamond), new Card(Cards.Eight,Color.Diamond))) == "Straight flush!"))
 
   test("Four of kind")(assert(check(List(new Card(Cards.Ten,Color.Club ),new Card(Cards.Ten,Color.Diamond), new Card(Cards.Ten,Color.Heart), new Card(Cards.Ten,Color.Spade), new Card(Cards.Six,Color.Heart))) == "Four of kind"))
 
@@ -14,9 +14,9 @@ class PokerTest extends FunSuite {
 
   test("Flush")(assert(check(List(new Card(Cards.Ten,Color.Diamond),new Card(Cards.Two,Color.Diamond), new Card(Cards.Queen,Color.Diamond), new Card(Cards.Seven,Color.Diamond), new Card(Cards.Eight,Color.Diamond))) == "Flush"))
 
-  test("Straight")(assert(check(List(new Card(Cards.Ten,Color.Diamond),new Card(Cards.Nine,Color.Diamond), new Card(Cards.Eight,Color.Diamond), new Card(Cards.Seven,Color.Heart), new Card(Cards.Six,Color.Heart))) == "Straight"))
+  test("Straight")(assert(check(List(new Card(Cards.Nine,Color.Diamond), new Card(Cards.Eight,Color.Diamond),new Card(Cards.Ten,Color.Diamond), new Card(Cards.Seven,Color.Heart), new Card(Cards.Six,Color.Heart))) == "Straight"))
 
-  test("Three of kind")(assert(check(List(new Card(Cards.Ten,Color.Club),new Card(Cards.Ten,Color.Diamond), new Card(Cards.Ten,Color.Diamond), new Card(Cards.Ace,Color.Heart), new Card(Cards.Eight, Color.Heart))) == "Three of kind"))
+  test("Three of kind")(assert(check(List(new Card(Cards.Ten,Color.Club),new Card(Cards.Ten,Color.Diamond), new Card(Cards.Ten,Color.Heart), new Card(Cards.Ace,Color.Heart), new Card(Cards.Eight, Color.Heart))) == "Three of kind"))
 
   test("Two pair")(assert(check(List(new Card(Cards.Ten,Color.Club),new Card(Cards.Ten,Color.Diamond), new Card(Cards.Eight,Color.Diamond), new Card(Cards.Eight,Color.Heart), new Card(Cards.Six, Color.Heart))) == "Two pair"))
 
