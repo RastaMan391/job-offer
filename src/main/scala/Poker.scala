@@ -49,44 +49,52 @@ object Poker {
     list.count(_.number == list(x).number)
   }
 
-  def checkPair(list: List[Card], countCard: Int): Int = {
-    if(countNumberCards(list, 0) > countCard && list.length > 1) checkPair(list.tail, countNumberCards(list, 0))
-    else if(list.length > 1) checkPair(list.tail, countCard)
-    else if(countNumberCards(list, 0) > countCard) countNumberCards(list, 0)
-    else countCard
+
+  def checkTheSameCard(list: List[Card]): Int = {
+    6 - List(list(0).number, list(1).number, list(2).number, list(3).number, list(4).number).distinct.length
   }
 
-  def checkTwoPair(list: List[Card], value: Int): Int = {
-    if (list.length - 2 > value) countNumberCards(list, value) + checkTwoPair(list, value + 1)
-    else value
+  def checkPair(list: List[Card]) = {
+    def checkTwoPair(list: List[Card], value: Int): Int = {
+      if (list.length - 2 > value) countNumberCards(list, value) + checkTwoPair(list, value + 1)
+      else value
+    }
+
+    if(checkTheSameCard(list) == 2 ) "One pair"
+    else if(checkTheSameCard(list) == 3 && checkTwoPair(list, 0) != 9) "Three of kind"
+    else if(checkTheSameCard(list) == 4 && checkFullHouse(list) == false) "Four of kind"
+    else if(checkTheSameCard(list) == 3) "Two pairs"
+    else "Nothing"
+  }
+
+  def checkFullHouse(list: List[Card]): Boolean = {
+    def countCards(list: List[Card]) = {
+      list.count(_.number == (list.distinct(0).number ))
+    }
+
+    checkTheSameCard(list) == 4 && (countCards(list) == 3 || countCards(list) == 2)
   }
 
   def checkStraight(list:List[Card]): Boolean = {
+    def checkStraightUp(list: List[Card]): Boolean = {
+      if (list(0).number == list(1).number + 1 && list.length > 2) checkStraightUp(list.tail)
+      else if(list(0).number == list(1).number + 1 && list.length == 2) true
+      else false
+    }
+
+    def checkStraightDown(list: List[Card]): Boolean = {
+      if (list(0).number == list(1).number - 1 && list.length > 2) checkStraightDown(list.tail)
+      else if(list(0).number == list(1).number - 1 && list.length == 2) true
+      else false
+    }
+
     checkStraightUp(list.sortWith(_.number > _.number)) || checkStraightDown(list.sortWith(_.number < _.number))
   }
-
-  def checkStraightUp(list: List[Card]): Boolean = {
-    if (list(0).number == list(1).number + 1 && list.length > 2) checkStraightUp(list.tail)
-    else if(list(0).number == list(1).number + 1 && list.length == 2) true
-    else false
-  }
-
-  def checkStraightDown(list: List[Card]): Boolean = {
-    if (list(0).number == list(1).number - 1 && list.length > 2) checkStraightDown(list.tail)
-    else if(list(0).number == list(1).number - 1 && list.length == 2) true
-    else false
-  }
-
 
   def checkColor(list: List[Card]): Boolean = {
     if(list(0).color == list(1).color && list.length > 2) checkColor(list.tail)
     else if (list(0).color == list(1).color && list.length == 2) true
     else false
-  }
-
-  def checkFullHouse(list: List[Card]): Boolean = {
-    val cardCount = List(countNumberCards(list,0),countNumberCards(list,1),countNumberCards(list,2),countNumberCards(list,3),countNumberCards(list,4))
-    cardCount.max == 3 && cardCount.count(_ == 2) == 2
   }
 
   def checkPoker(list: List[Card]): Boolean = {
@@ -96,13 +104,13 @@ object Poker {
   def check(list: List[Card]): String = {
     if(checkHand(list)) throw new IllegalArgumentException("Incorrect cards")
     else if(checkPoker(list)) "Straight flush!"
-    else if(checkPair(list, 0) == 4) "Four of kind"
+    else if(checkPair(list) == "Four of kind") "Four of kind"
     else if(checkFullHouse(list)) "Full house"
     else if(checkColor(list)) "Flush"
     else if(checkStraight(list)) "Straight"
-    else if(checkPair(list, 0) == 3) "Three of kind"
-    else if(checkTwoPair(list, 0) == 9) "Two pair"
-    else if(checkPair(list, 0) == 2) "One pair"
+    else if(checkPair(list) == "Three of kind") "Three of kind"
+    else if(checkPair(list) == "Two pairs") "Two pairs"
+    else if(checkPair(list) == "One pair") "One pair"
     else {
       if(checkHighCard(list,0) == 14) "High Card: Ace"
       else if(checkHighCard(list,0) == 13) "High Card: King"

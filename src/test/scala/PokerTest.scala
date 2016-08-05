@@ -18,7 +18,7 @@ class PokerTest extends FunSuite {
 
   test("Three of kind")(assert(check(List(new Card(Cards.Ten,Color.Club),new Card(Cards.Ten,Color.Diamond), new Card(Cards.Ten,Color.Heart), new Card(Cards.Ace,Color.Heart), new Card(Cards.Eight, Color.Heart))) == "Three of kind"))
 
-  test("Two pair")(assert(check(List(new Card(Cards.Ten,Color.Club),new Card(Cards.Ten,Color.Diamond), new Card(Cards.Eight,Color.Diamond), new Card(Cards.Eight,Color.Heart), new Card(Cards.Six, Color.Heart))) == "Two pair"))
+  test("Two pairs")(assert(check(List(new Card(Cards.Ten,Color.Club),new Card(Cards.Ten,Color.Diamond), new Card(Cards.Eight,Color.Diamond), new Card(Cards.Eight,Color.Heart), new Card(Cards.Six, Color.Heart))) == "Two pairs"))
 
   test("One pair")(assert(check(List(new Card(Cards.Queen,Color.Club),new Card(Cards.Queen,Color.Diamond), new Card(Cards.Eight,Color.Diamond), new Card(Cards.Seven,Color.Heart), new Card(Cards.Six, Color.Heart))) == "One pair"))
 
