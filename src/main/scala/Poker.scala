@@ -42,10 +42,7 @@ object Poker {
   }
 
   def checkHighCard(list: List[Card], highCard: Int): Int = {
-    if(list(0).number > highCard && list.length > 1) checkHighCard(list.tail, list(0).number)
-    else if(list.length > 1) checkHighCard(list.tail, highCard)
-    else if(list(0).number > highCard) list(0).number
-    else highCard
+    list.sortWith(_.number > _.number)(0).number
   }
 
   def countNumberCards(list: List[Card], x: Int) = {
@@ -117,10 +114,10 @@ object Poker {
 
   def main(args: Array[String]): Unit ={
     val card: List[Card] = randomCards
-    //val card2: List[Card] = List(new Card(Cards.Ace,Color.Club),new Card(Cards.Ace,Color.Heart), new Card(Cards.Ten,Color.Heart), new Card(Cards.Seven,Color.Spade), new Card(Cards.Six, Color.Club))
+    val card2: List[Card] = List(new Card(Cards.Ace,Color.Club),new Card(Cards.Ace,Color.Heart), new Card(Cards.Ten,Color.Heart), new Card(Cards.Seven,Color.Spade), new Card(Cards.Six, Color.Club))
 
     println(check(card))
-    //println(check(card2))
+    println(check(card2))
   }
 
 }
