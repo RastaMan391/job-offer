@@ -24,6 +24,30 @@ object Poker {
     val Ace = 14
   }
 
+  object result extends Enumeration {
+    val StraightFlush = 16
+    val FourOfKind = 15
+    val FullHouse = 14
+    val Flush = 13
+    val Straight = 12
+    val ThreeOfKind = 11
+    val TwoPairs = 10
+    val OnePair = 9
+    val Nothing = 0
+  }
+
+  case class ResultEnd(number: Int, description: String)
+
+  def matchTest(numberOfCard: Int): String = {
+    numberOfCard match {
+      case 14 => "Ace"
+      case 13 => "King"
+      case 12 => "Queen"
+      case 11 => "Jack"
+      case _ => numberOfCard.toString
+    }
+  }
+
   case class Card(number: Int, color: Int)
 
   def checkHand(list: List[Card]): Boolean = {
@@ -59,22 +83,23 @@ object Poker {
       else value
     }
 
-    if(checkTheSameCard(list) == 2 ) "One pair"
-    else if(checkTheSameCard(list) == 3 && checkTwoPair(list, 0) != 9) "Three of kind"
-    else if(checkTheSameCard(list) == 4 && checkFullHouse(list) == false) "Four of kind"
-    else if(checkTheSameCard(list) == 3) "Two pairs"
-    else "Nothing"
+    if(checkTheSameCard(list) == 2 ) ResultEnd(result.OnePair, "One pair")
+    else if(checkTheSameCard(list) == 3 && checkTwoPair(list, 0) != 9) ResultEnd(result.ThreeOfKind, "Three of kind")
+    else if(checkTheSameCard(list) == 4 && (checkFullHouse(list)).number == 0) ResultEnd(result.FourOfKind, "Four of kind")
+    else if(checkTheSameCard(list) == 3) ResultEnd(result.TwoPairs, "Two pairs")
+    else ResultEnd(result.Nothing, "")
   }
 
-  def checkFullHouse(list: List[Card]): Boolean = {
+  def checkFullHouse(list: List[Card]): ResultEnd = {
     def countCards(list: List[Card]) = {
       list.count(_.number == (list.distinct(0).number ))
     }
 
-    checkTheSameCard(list) == 4 && (countCards(list) == 2 || countCards(list) == 3)
+    if(checkTheSameCard(list) == 4 && (countCards(list) == 2 || countCards(list) == 3)) ResultEnd(result.FullHouse, "Full house")
+    else ResultEnd(result.Nothing,"")
   }
 
-  def checkStraight(list:List[Card]): Boolean = {
+  def checkStraight(list:List[Card]): ResultEnd = {
     def checkStraightUp(list: List[Card]): Boolean = {
       if (list(0).number == list(1).number + 1 && list.length > 2) checkStraightUp(list.tail)
       else if(list(0).number == list(1).number + 1 && list.length == 2) true
@@ -87,44 +112,27 @@ object Poker {
       else false
     }
 
-    checkStraightUp(list.sortWith(_.number > _.number)) || checkStraightDown(list.sortWith(_.number < _.number))
+    if(checkStraightUp(list.sortWith(_.number > _.number)) || checkStraightDown(list.sortWith(_.number < _.number))) ResultEnd(result.Straight, "Straight")
+    else ResultEnd(result.Nothing, "")
   }
 
-  def checkColor(list: List[Card]): Boolean = {
+  def checkColor(list: List[Card]): ResultEnd = {
     if(list(0).color == list(1).color && list.length > 2) checkColor(list.tail)
-    else if (list(0).color == list(1).color && list.length == 2) true
-    else false
+    else if (list(0).color == list(1).color && list.length == 2) ResultEnd(result.Flush, "Flush")
+    else ResultEnd(result.Nothing, "")
   }
 
-  def checkPoker(list: List[Card]): Boolean = {
-    checkColor(list) && checkStraight(list)
+  def checkPoker(list: List[Card]): ResultEnd = {
+    if ((checkColor(list)).number == 13 && (checkStraight(list)).number == 12) ResultEnd(result.StraightFlush, "Straight flush!")
+    else ResultEnd(result.Nothing,"")
   }
 
-  def check(list: List[Card]): String = {
-      if(checkHand(list)) throw new IllegalArgumentException("Incorrect cards")
-      else if(checkPoker(list)) "Straight flush!"
-      else if(checkPair(list) == "Four of kind") "Four of kind"
-      else if(checkFullHouse(list)) "Full house"
-      else if(checkColor(list)) "Flush"
-      else if(checkStraight(list)) "Straight"
-      else if(checkPair(list) == "Three of kind") "Three of kind"
-      else if(checkPair(list) == "Two pairs") "Two pairs"
-      else if(checkPair(list) == "One pair") "One pair"
-      else {
-        if(checkHighCard(list,0) == 14) "High Card: Ace"
-        else if(checkHighCard(list,0) == 13) "High Card: King"
-        else if(checkHighCard(list,0) == 12) "High Card: Queen"
-        else if(checkHighCard(list,0) == 11) "High Card: Jack"
-        else "High Card: " + checkHighCard(list,0).toString()
-      }
+  def check(list: List[Card]) = {
+    if(checkHand(list)) throw new IllegalArgumentException("Incorrect cards")
+    else {
+      val score = List(checkPoker(list), checkPair(list), checkFullHouse(list), checkColor(list), checkStraight(list)).sortWith(_.number > _.number)(0)
+      if (score.number != 0) score.description
+      else "High Card: " + matchTest(checkHighCard(list, 0))
+    }
   }
-
-  def main(args: Array[String]): Unit ={
-    val card: List[Card] = randomCards
-    val card2: List[Card] = List(Card(Cards.Two,Color.Club), Card(Cards.Ace,Color.Heart), Card(Cards.Ten,Color.Heart), Card(Cards.Seven,Color.Spade), Card(Cards.Ace, Color.Club))
-
-    println(check(card))
-    println(check(card2))
-  }
-
 }
