@@ -11,31 +11,14 @@ object Poker {
     val Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace = Value
   }
 
-  object result extends Enumeration {
-    val StraightFlush = 16
-    val FourOfKind = 15
-    val FullHouse = 14
-    val Flush = 13
-    val Straight = 12
-    val ThreeOfKind = 11
-    val TwoPairs = 10
-    val OnePair = 9
-    val Nothing = 0
+  object Result extends Enumeration {
+    type Result = Value
+    val Nothing, OnePair, TwoPairs, ThreeOfKind, Straight, Flush, FullHouse, FourOfKind, StraightFlush = Value
   }
 
-  case class ResultEnd(number: Int, description: String)
+  case class ResultEnd(resultSuit: Result.Value, description: String)
 
-  def matchTest(numberOfCard: Cards.Value): String = {
-    numberOfCard match {
-      case Cards.Ace => "Ace"
-      case Cards.King => "King"
-      case Cards.Queen => "Queen"
-      case Cards.Jack => "Jack"
-      case _ => numberOfCard.toString
-    }
-  }
-
-  case class Card(number: Cards.Value, color: Color.Value)
+  case class Card(valueOfCard: Cards.Value, color: Color.Value)
 
   def checkHand(list: List[Card]): Boolean = {
     list.distinct.length != 5
@@ -53,51 +36,58 @@ object Poker {
   }
 
   def checkHighCard(list: List[Card]): Cards.Value = {
-    list.map(_.number).sortWith(_ > _)(0)
+    list.map(_.valueOfCard).sortWith(_ > _)(0)
   }
 
   def checkTheSameCard(list: List[Card]): Int = {
-    list.map(_.number).distinct.length
+    list.map(_.valueOfCard).distinct.length
   }
 
   def checkPair(list: List[Card]): ResultEnd = {
-    if(checkTheSameCard(list) == 4 ) ResultEnd(result.OnePair, "One pair")
-    else if(checkTheSameCard(list) == 3 && (list.map(_.number)).map(x => list.count(_.number == x)).max == 3) ResultEnd(result.ThreeOfKind, "Three of kind")
-    else if(checkTheSameCard(list) == 2 && (checkFullHouse(list)).number == 0) ResultEnd(result.FourOfKind, "Four of kind")
-    else if(checkTheSameCard(list) == 3) ResultEnd(result.TwoPairs, "Two pairs")
-    else ResultEnd(result.Nothing, "")
+    if(checkTheSameCard(list) == 4 ) ResultEnd(Result.OnePair, "One pair")
+    else if(checkTheSameCard(list) == 3 && (list.map(_.valueOfCard)).map(x => list.count(_.valueOfCard == x)).max == 3) ResultEnd(Result.ThreeOfKind, "Three of kind")
+    else if(checkTheSameCard(list) == 2 && (checkFullHouse(list)).resultSuit == Result.Nothing) ResultEnd(Result.FourOfKind, "Four of kind")
+    else if(checkTheSameCard(list) == 3) ResultEnd(Result.TwoPairs, "Two pairs")
+    else ResultEnd(Result.Nothing, "")
   }
 
   def checkFullHouse(list: List[Card]): ResultEnd = {
-    def countCards(list: List[Card]) = {
-      list.count(_.number == (list.distinct(0).number ))
+    def countDuplicateCards(list: List[Card]) = {
+      list.count(_.valueOfCard == (list.distinct(0).valueOfCard ))
     }
 
-    if(checkTheSameCard(list) == 2 && (countCards(list) == 2 || countCards(list) == 3)) ResultEnd(result.FullHouse, "Full house")
-    else ResultEnd(result.Nothing,"")
+    if(checkTheSameCard(list) == 2 && (countDuplicateCards(list) == 2 || countDuplicateCards(list) == 3)) ResultEnd(Result.FullHouse, "Full house")
+    else ResultEnd(Result.Nothing,"")
   }
 
   def checkStraight(list:List[Card]): ResultEnd = {
-    if(list.map(_.number).zipWithIndex.map(x => (x._1).id + x._2).distinct.length == 1) ResultEnd(result.Straight, "Straight")
-    else ResultEnd(result.Nothing, "")
+    if(list.map(_.valueOfCard).zipWithIndex.map(x => (x._1).id + x._2).distinct.length == 1) ResultEnd(Result.Straight, "Straight")
+    else ResultEnd(Result.Nothing, "")
   }
 
   def checkColor(list: List[Card]): ResultEnd = {
-    if(list.map(_.color).distinct.length == 1) ResultEnd(result.Flush, "Flush")
-    else ResultEnd(result.Nothing, "")
+    if(list.map(_.color).distinct.length == 1) ResultEnd(Result.Flush, "Flush")
+    else ResultEnd(Result.Nothing, "")
   }
 
   def checkPoker(list: List[Card]): ResultEnd = {
-    if ((checkColor(list)).number == 13 && (checkStraight(list.sortWith(_.number > _.number))).number == 12) ResultEnd(result.StraightFlush, "Straight flush!")
-    else ResultEnd(result.Nothing,"")
+    if ((checkColor(list)).resultSuit == Result.Flush && (checkStraight(list.sortWith(_.valueOfCard > _.valueOfCard))).resultSuit == Result.Straight) ResultEnd(Result.StraightFlush, "Straight flush!")
+    else ResultEnd(Result.Nothing,"")
+  }
+
+  def lazyCheckResult(score: Stream[ResultEnd]): ResultEnd = {
+    if(score.isEmpty) ResultEnd(Result.Nothing, "Nothing")
+    else if(score.head.resultSuit == Result.Nothing) lazyCheckResult(score.tail)
+    else score.head
   }
 
   def check(list: List[Card]): String = {
     if(checkHand(list)) throw new IllegalArgumentException("Incorrect cards")
     else {
-      val score = List(checkPoker(list), checkPair(list), checkFullHouse(list), checkColor(list), checkStraight(list.sortWith(_.number > _.number))).sortWith(_.number > _.number)(0)
-      if (score.number != 0) score.description
-      else "High Card: " + matchTest(checkHighCard(list))
+      val scoreList = List(checkPoker(list), checkPair(list), checkFullHouse(list), checkColor(list), checkStraight(list.sortWith(_.valueOfCard > _.valueOfCard))).toStream
+      val score = lazyCheckResult(scoreList)
+      if (score.resultSuit != Result.Nothing) score.description
+      else "High Card: " + checkHighCard(list).toString
     }
   }
 }
