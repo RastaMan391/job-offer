@@ -84,7 +84,7 @@ object Poker {
   def check(list: List[Card]): String = {
     if(checkHand(list)) throw new IllegalArgumentException("Incorrect cards")
     else {
-      val scoreList = List(checkPoker(list), checkPair(list), checkFullHouse(list), checkColor(list), checkStraight(list.sortWith(_.valueOfCard > _.valueOfCard))).toStream
+      val scoreList = checkPoker(list) #:: checkPair(list) #:: checkFullHouse(list) #:: checkColor(list) #:: checkStraight(list.sortWith(_.valueOfCard > _.valueOfCard)) #:: Stream.empty
       val score = lazyCheckResult(scoreList)
       if (score.resultSuit != Result.Nothing) score.description
       else "High Card: " + checkHighCard(list).toString

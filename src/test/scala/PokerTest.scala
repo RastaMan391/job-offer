@@ -39,4 +39,5 @@ class PokerTest extends FunSuite {
   test("High Card: Seven")(assert(check(List (Card(Cards.Three,Color.Club), Card(Cards.Two,Color.Diamond), Card(Cards.Four,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: Seven"))
 
   test("Incorrect cards")(assert(intercept[IllegalArgumentException]{check(List (Card(Cards.Two,Color.Diamond), Card(Cards.Two,Color.Diamond), Card(Cards.Four,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond)))}.getMessage === "Incorrect cards"))
+
 }

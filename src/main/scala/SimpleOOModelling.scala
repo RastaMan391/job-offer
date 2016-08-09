@@ -1,6 +1,6 @@
 object SimpleOOModelling {
   case class Car(brand: String, model: String, volume: String){
-    require(volume.length < 4, "Incorrect value of displacement volume")
+    require(volume.length == 3 && volume.toDouble > 0 && volume.toDouble < 10, "Incorrect value of displacement volume")
   }
 
   def function(cars: Seq[Car]): Seq[Car] = {
