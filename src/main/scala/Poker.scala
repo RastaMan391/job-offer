@@ -2,26 +2,13 @@ import scala.util.Random
 
 object Poker {
   object Color extends Enumeration {
-    val Club = 1
-    val Diamond = 2
-    val Heart = 3
-    val Spade = 4
+    type Color = Value
+    val Club, Diamond, Heart, Spade = Value
   }
 
   object Cards extends Enumeration {
-    val Two = 2
-    val Three = 3
-    val Four = 4
-    val Five = 5
-    val Six = 6
-    val Seven = 7
-    val Eight = 8
-    val Nine = 9
-    val Ten = 10
-    val Jack = 11
-    val Queen = 12
-    val King = 13
-    val Ace = 14
+    type Cards = Value
+    val Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace = Value
   }
 
   object result extends Enumeration {
@@ -38,17 +25,17 @@ object Poker {
 
   case class ResultEnd(number: Int, description: String)
 
-  def matchTest(numberOfCard: Int): String = {
+  def matchTest(numberOfCard: Cards.Value): String = {
     numberOfCard match {
-      case 14 => "Ace"
-      case 13 => "King"
-      case 12 => "Queen"
-      case 11 => "Jack"
+      case Cards.Ace => "Ace"
+      case Cards.King => "King"
+      case Cards.Queen => "Queen"
+      case Cards.Jack => "Jack"
       case _ => numberOfCard.toString
     }
   }
 
-  case class Card(number: Int, color: Int)
+  case class Card(number: Cards.Value, color: Color.Value)
 
   def checkHand(list: List[Card]): Boolean = {
     list.distinct.length != 5
@@ -56,7 +43,7 @@ object Poker {
 
   def randomCard: Card = {
     val x = new Random
-    new Card(x.nextInt(13)+2, x.nextInt(4)+1)
+    new Card(Cards(x.nextInt(13)+2), Color(x.nextInt(4)+1))
   }
 
   def randomCards: List[Card] = {
@@ -65,8 +52,8 @@ object Poker {
     else cards
   }
 
-  def checkHighCard(list: List[Card], highCard: Int): Int = {
-    list.sortWith(_.number > _.number)(0).number
+  def checkHighCard(list: List[Card]): Cards.Value = {
+    list.map(_.number).sortWith(_ > _)(0)
   }
 
   def checkTheSameCard(list: List[Card]): Int = {
@@ -91,7 +78,7 @@ object Poker {
   }
 
   def checkStraight(list:List[Card]): ResultEnd = {
-    if(list.map(_.number).zipWithIndex.map(x => x._1 + x._2).distinct.length == 1) ResultEnd(result.Straight, "Straight")
+    if(list.map(_.number).zipWithIndex.map(x => (x._1).id + x._2).distinct.length == 1) ResultEnd(result.Straight, "Straight")
     else ResultEnd(result.Nothing, "")
   }
 
@@ -110,7 +97,7 @@ object Poker {
     else {
       val score = List(checkPoker(list), checkPair(list), checkFullHouse(list), checkColor(list), checkStraight(list.sortWith(_.number > _.number))).sortWith(_.number > _.number)(0)
       if (score.number != 0) score.description
-      else "High Card: " + matchTest(checkHighCard(list, 0))
+      else "High Card: " + matchTest(checkHighCard(list))
     }
   }
 }

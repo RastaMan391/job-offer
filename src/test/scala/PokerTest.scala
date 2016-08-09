@@ -30,13 +30,13 @@ class PokerTest extends FunSuite {
 
   test("High Card: Jack")(assert(check(List (Card(Cards.Ten,Color.Club), Card(Cards.Jack,Color.Diamond), Card(Cards.Eight,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: Jack"))
 
-  test("High Card: 10")(assert(check(List (Card(Cards.Ten,Color.Club), Card(Cards.Two,Color.Diamond), Card(Cards.Eight,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: 10"))
+  test("High Card: Ten")(assert(check(List (Card(Cards.Ten,Color.Club), Card(Cards.Two,Color.Diamond), Card(Cards.Eight,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: Ten"))
 
-  test("High Card: 9")(assert(check(List (Card(Cards.Three,Color.Club), Card(Cards.Nine,Color.Diamond), Card(Cards.Eight,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: 9"))
+  test("High Card: Nine")(assert(check(List (Card(Cards.Three,Color.Club), Card(Cards.Nine,Color.Diamond), Card(Cards.Eight,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: Nine"))
 
-  test("High Card: 8")(assert(check(List (Card(Cards.Three,Color.Club), Card(Cards.Two,Color.Diamond), Card(Cards.Eight,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: 8"))
+  test("High Card: Eight")(assert(check(List (Card(Cards.Three,Color.Club), Card(Cards.Two,Color.Diamond), Card(Cards.Eight,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: Eight"))
 
-  test("High Card: 7")(assert(check(List (Card(Cards.Three,Color.Club), Card(Cards.Two,Color.Diamond), Card(Cards.Four,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: 7"))
+  test("High Card: Seven")(assert(check(List (Card(Cards.Three,Color.Club), Card(Cards.Two,Color.Diamond), Card(Cards.Four,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond))) == "High Card: Seven"))
 
   test("Incorrect cards")(assert(intercept[IllegalArgumentException]{check(List (Card(Cards.Two,Color.Diamond), Card(Cards.Two,Color.Diamond), Card(Cards.Four,Color.Diamond), Card(Cards.Seven,Color.Diamond), Card(Cards.Six, Color.Diamond)))}.getMessage === "Incorrect cards"))
 }
