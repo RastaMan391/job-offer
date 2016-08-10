@@ -1,4 +1,4 @@
-client: ID, firstName, lastName, address, phoneNumber, age
+﻿client: ID, firstName, lastName, address, phoneNumber, age
 clientAccount: clientID, accountNumber
 transaction: ID, accountNumber, transfer, incoming, outcoming, date
 
@@ -9,14 +9,14 @@ Powiązania:
 - z Tabeli clientAccount powiązane 'accountNumber' z 'accountNumber' w tabeli transaction
 
 
-A)
+Zadanie 1:
 
-SELECT DISTINCT firstName, lastName FROM client JOIN clientAccount ON client.ID = clientAccount.clientID JOIN transaction ON clientAccount.accountNumber = transaction.accountNumber WHERE client.ID NOT IN(SELECT client.ID FROM client JOIN clientAccount ON client.ID = clientAccount.clientID JOIN transaction ON clientAccount.accountNumber = transaction.accountNumber WHERE client.age <= 30 OR (month(transaction.date) = 1 AND year(transaction.date) = 2015));
+SELECT DISTINCT firstName, lastName FROM client WHERE client.ID NOT IN(SELECT client.ID FROM client JOIN clientAccount ON client.ID = clientAccount.clientID JOIN transaction ON clientAccount.accountNumber = transaction.accountNumber WHERE client.age <= 30 OR (month(transaction.date) = 1 AND year(transaction.date) = 2015));
 
-B)
+Zadanie 2:
 
-SELECT DISTINCT firstName, lastName FROM client JOIN clientAccount ON client.ID = clientAccount.clientID JOIN transaction ON clientAccount.accountNumber = transaction.accountNumber WHERE (month(transaction.date) > 0 AND month(transaction.date) < 4) GROUP BY transaction.accountNumber HAVING sum(transaction.incoming) >100000;
+SELECT DISTINCT firstName, lastName, sum(transaction.incoming) FROM client JOIN clientAccount ON client.ID = clientAccount.clientID JOIN transaction ON clientAccount.accountNumber = transaction.accountNumber WHERE ((month(transaction.date) > 0 AND month(transaction.date) < 4) AND year(transaction.date) = 2015) GROUP BY clientAccount.clientID HAVING sum(transaction.incoming) >100000;
 
-C)
+Zadanie 3:
 
 SELECT firstName, lastName FROM client JOIN clientAccount ON client.ID = clientAccount.clientID JOIN transaction ON clientAccount.accountNumber = transaction.accountNumber WHERE year(transaction.date) = 2015 GROUP BY client.ID ORDER BY sum(incoming + abs(outcoming)) DESC LIMIT 1;
